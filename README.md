@@ -117,7 +117,7 @@ var sql = new SelectBuilder()
 sql.Should().Be("SELECT Campo1,Campo2,Campo3 FROM Tabela1 WHERE Campo1 = 'A very cool value'");
 ```
 
-Want more samples? Look a the tests --Inserir link aqui.
+Want more samples? Look a the [tests](https://github.com/BraspagDevelopers/fluent-query-builder/blob/master/src/Braspag.FluentQueryBuilder.Tests/QueryBuilderTests.cs)! Every method has a test.
 
 # Build and Test
 To build this project you will need Visual Studio 2017.3. If you already have it, clone this repo and have fun!

@@ -11,7 +11,7 @@
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>sql</PackageTags>
     <Description>The purpose of this project is to make easier the construction of dynamic queries that are commonly used in the implementation of reports with several optional filters.</Description>
-    <PackageLicenseUrl>https://github.com/BraspagDevelopers/fluent-query-builder/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/BraspagDevelopers/fluent-query-builder/master/LICENSE</PackageLicenseUrl>
     <PackageReleaseNotes>First version of Fluent Query Builder.
 
 Includes:

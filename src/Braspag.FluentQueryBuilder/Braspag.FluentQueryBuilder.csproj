@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Braspag Developement Team</Authors>
+    <Company>Braspag</Company>
+    <Copyright>Braspag</Copyright>
+    <PackageProjectUrl>https://github.com/BraspagDevelopers/fluent-query-builder</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/BraspagDevelopers/fluent-query-builder</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>sql</PackageTags>
+    <Description>The purpose of this project is to make easier the construction of dynamic queries that are commonly used in the implementation of reports with several optional filters.</Description>
+    <PackageLicenseUrl>https://github.com/BraspagDevelopers/fluent-query-builder/LICENSE</PackageLicenseUrl>
+    <PackageReleaseNotes>First version of Fluent Query Builder.
+
+Includes:
+
+- Select 
+- From
+- InnerJoin
+- LeftJoin
+- FullOuterJoin
+- Where
+ - And
+ - AndIf
+ - Or
+ - OrIf
+- GroupBy
+- OrderBy</PackageReleaseNotes>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageIconUrl>http://www.braspag.com.br/wp-content/uploads/2016/03/logo-braspag.png</PackageIconUrl>
+  </PropertyGroup>
+
+</Project>

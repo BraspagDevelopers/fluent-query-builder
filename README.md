@@ -11,9 +11,9 @@ This project also does not validade order of the method calls, so beware!
 Below is an example of converting queries with IFs to **SelectBuilder**.
 
 ``` csharp
-var sql = string.Concat("SELECT C.Id, C.Name, C.Identity, C.Phone, E.State ",
-                        "FROM Cliente C ",
-                        "INNER JOIN Endereco E ON C.Id = E.ClientId ",
+var sql = string.Concat("SELECT C.Id, C.Name, C.Identity, C.Phone, A.State ",
+                        "FROM Client C ",
+                        "INNER JOIN Address A ON C.Id = E.ClientId ",
                         "WHERE C.Active = 1 AND C.RegisterDate > '2017-01-01'";
                         
 if(!string.IsNullOrEmpty(filter.Name))
@@ -22,16 +22,18 @@ if(!string.IsNullOrEmpty(filter.Name))
 }
 if(!string.IsNullOrEmpty(filter.State))
 {
-  sql = string.Concat("AND E.Staste = @state");
+  sql = string.Concat("AND A.State = @state");
 }
 ```
 This type of code become confuse and hard to read very quickly. The approach using **SelectBuilder** is:
 ``` csharp
 var sql = new SelectBuilder()
-  .Select("C.Id, C.Name, C.Identity, C.Phone, E.State")
+  .Select("C.Id, C.Name, C.Identity, C.Phone, A.State")
   .From("Cliente C")
+  .InnerJoin("Address A", "C.Id = A.ClientId")
   .Where("C.Active = 1")
-  .And("C.Active = 1 AND C.RegisterDate > '2017-01-01'")
+  .And("C.Active = 1")
+  .And("C.RegisterDate > '2017-01-01'")
   .AndIf("C.Name LIKE '%' + @clientName + '%'", !string.IsNullOrEmpty(filter.Name))
   .AndIf("E.Staste = @state", !string.IsNullOrEmpty(filter.State));
 ```

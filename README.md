@@ -1,4 +1,6 @@
-# Introduction 
+# FluentQueryValidator  ![](https://braspag.visualstudio.com/_apis/public/build/definitions/30d2b6ae-399c-49ac-997b-e563386809e0/327/badge)
+
+### What is it? 
 
 The purpose of this project is to make easier the construction of dynamic queries that are commonly used in the implementation of reports with several optional filters.
 

@@ -123,6 +123,16 @@ namespace Braspag.FluentQueryBuilder
             return _selectBuilder.OrderBy(order);
         }
 
+        /// <summary>
+        /// Adds pagination using the OFFSET/FETCH statements
+        /// </summary>
+        /// <param name="pageSize">Number of rows per page</param>
+        /// <param name="currentPage">Current page</param>
+        public SelectBuilder Paginated(int pageSize, int currentPage)
+        {
+            return _selectBuilder.Paginated(pageSize, currentPage);
+        }
+
         public string Build()
         {
             return _selectBuilder.Build();

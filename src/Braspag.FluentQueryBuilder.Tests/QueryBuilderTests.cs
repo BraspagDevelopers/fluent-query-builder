@@ -234,5 +234,17 @@ namespace Braspag.FluentQueryBuilder.Tests
 
             sql.Should().Be("SELECT Field1,Field2,COUNT(*) FROM Table1 ORDER BY Field1,Field2");
         }
+
+        [Fact]
+        public void Select_Paginated_ShouldReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("Field1,Field2,COUNT(*)")
+                .From("Table1")
+                .Paginated(50, 3)
+                .Build();
+
+            sql.Should().Be("SELECT Field1,Field2,COUNT(*) FROM Table1 OFFSET 100 ROWS FETCH NEXT 50 ROWS ONLY");
+        }
     }
 }

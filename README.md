@@ -107,7 +107,7 @@ The **SelectBuilder** is designed to have an API as fluent as possible, so it wi
 - **OrderBy(** *string[] order* **)**   
   &rarr; Adds the ORDER BY statement to query
   
-- **Paginated(** *int pageSize, int currentPage* **)
+- **Paginated(** *int pageSize, int currentPage* **)**     
   &rarr; Adds pagination using the OFFSET/FETCH statements
  
 # Sample

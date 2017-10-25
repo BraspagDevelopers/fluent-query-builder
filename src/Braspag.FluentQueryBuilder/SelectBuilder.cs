@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Braspag.FluentQueryBuilder
 {
@@ -66,6 +68,18 @@ namespace Braspag.FluentQueryBuilder
         public SelectBuilder LeftJoin(string table, string on)
         {
             _builder.Append(Join("LEFT", table, on));
+            return this;
+        }
+
+        /// <summary>
+        /// Adds an RIGHT JOIN with ON clause
+        /// </summary>
+        /// <param name="table">Name of the table</param>
+        /// <param name="on">ON clause</param>
+        /// <returns></returns>
+        public SelectBuilder RightJoin(string table, string on)
+        {
+            _builder.Append(Join("RIGHT", table, on));
             return this;
         }
 
@@ -142,9 +156,44 @@ namespace Braspag.FluentQueryBuilder
             return this;
         }
 
+        /// <summary>
+        /// Adds query hint option statement
+        /// </summary>
+        /// <param name="hints">The option clause to be used</param>
+        public SelectBuilder Option(params string[] hints)
+        {
+            _builder.Append(Hint("OPTION", hints));
+            return this;
+        }
+
+        /// <summary>
+        /// Adds table hint with statement
+        /// </summary>
+        /// <param name="hints">The with clause to be used</param>
+        /// <returns></returns>
+        public SelectBuilder With(params string[] hints)
+        {
+            _builder.Append(Hint("WITH", hints));
+            return this;
+        }
+
         public string Build()
         {
             return _builder.ToString();
+        }
+
+        /// <summary>
+        /// Mount the hints with their parentheses and commas
+        /// </summary>
+        /// <param name="hintClause">The hint clause(OPTION, WITH)</param>
+        /// <param name="hints">The hints statements array</param>
+        /// <returns>The hint with their parentheses and commas</returns>
+        private string Hint(string hintClause, IReadOnlyCollection<string> hints)
+        {
+            return hints.Aggregate($" {hintClause}(",
+                (current, hint) =>
+                    hints.Count == 1 || hints.Last().Equals(hint) ? current + hint : current + hint + ",",
+                resultHint => resultHint + ")");
         }
 
         private string Join(string join, string table, string on)

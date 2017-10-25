@@ -51,6 +51,19 @@ namespace Braspag.FluentQueryBuilder.Tests
             sql.Should().Be("SELECT Field1,Field2,Field3 FROM Table1 T1 LEFT JOIN Table2 T2 ON T1.Field1 = T2.Field2");
         }
 
+
+        [Fact]
+        public void RightJoin_WithOn_ShouldReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("Field1,Field2,Field3")
+                .From("Table1 T1")
+                .RightJoin("Table2 T2", "T1.Field1 = T2.Field2")
+                .Build();
+
+            sql.Should().Be("SELECT Field1,Field2,Field3 FROM Table1 T1 RIGHT JOIN Table2 T2 ON T1.Field1 = T2.Field2");
+        }
+
         [Fact]
         public void FullOuterJoin_WithOn_ShouldReturnExpectedResult()
         {
@@ -245,6 +258,54 @@ namespace Braspag.FluentQueryBuilder.Tests
                 .Build();
 
             sql.Should().Be("SELECT Field1,Field2,COUNT(*) FROM Table1 OFFSET 100 ROWS FETCH NEXT 50 ROWS ONLY");
+        }
+
+        [Fact]
+        public void Select_One_TableHint_ShoudlReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("Field1,Field2")
+                .From("Table1")
+                .With("TABLOCK")
+                .Build();
+
+            sql.Should().Be("SELECT Field1,Field2 FROM Table1 WITH(TABLOCK)");
+        }
+
+        [Fact]
+        public void Select_Multiple_TableHint_ShoudlReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("Field1,Field2")
+                .From("Table1")
+                .With("TABLOCK", "INDEX(myindex)", "KEEPIDENTITY")
+                .Build();
+
+            sql.Should().Be("SELECT Field1,Field2 FROM Table1 WITH(TABLOCK,INDEX(myindex),KEEPIDENTITY)");
+        }
+
+        [Fact]
+        public void Select_One_QueryHint_ShoudlReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("Field1,Field2")
+                .From("Table1")
+                .Option("RECOMPILE")
+                .Build();
+
+            sql.Should().Be("SELECT Field1,Field2 FROM Table1 OPTION(RECOMPILE)");
+        }
+
+        [Fact]
+        public void Select_Multiple_QueryHint_ShoudlReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("Field1,Field2")
+                .From("Table1")
+                .Option("RECOMPILE", "INDEX(myindex)", "KEEPIDENTITY")
+                .Build();
+
+            sql.Should().Be("SELECT Field1,Field2 FROM Table1 OPTION(RECOMPILE,INDEX(myindex),KEEPIDENTITY)");
         }
     }
 }

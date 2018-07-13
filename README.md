@@ -109,6 +109,18 @@ The **SelectBuilder** is designed to have an API as fluent as possible, so it wi
   
 - **Paginated(** *int pageSize, int currentPage* **)**     
   &rarr; Adds pagination using the OFFSET/FETCH statements
+
+- **With(** *string hint* **)**     
+  &rarr; Adds the WITH statement to use query hints
+
+- **With(** *string[] hint* **)**     
+  &rarr; Adds multiple hints to use the WITH statement
+
+- **Option(** *string hint* **)**     
+  &rarr; Adds the OPTION clause to use query hints
+
+- **Option(** *string[] hint* **)**     
+  &rarr; Adds multiple hints to use with OPTION clause
  
 # Sample
 

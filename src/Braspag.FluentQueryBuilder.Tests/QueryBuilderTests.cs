@@ -51,7 +51,6 @@ namespace Braspag.FluentQueryBuilder.Tests
             sql.Should().Be("SELECT Field1,Field2,Field3 FROM Table1 T1 LEFT JOIN Table2 T2 ON T1.Field1 = T2.Field2");
         }
 
-
         [Fact]
         public void RightJoin_WithOn_ShouldReturnExpectedResult()
         {
@@ -172,7 +171,6 @@ namespace Braspag.FluentQueryBuilder.Tests
             sql.Should().Be($"SELECT Field1,Field2,Field3 FROM Table1 WHERE Field1 = 'A very cool value'{complement}");
         }
 
-
         [Fact]
         public void Select_WithWhereOrGroup_ShouldReturnExpectedResult()
         {
@@ -214,6 +212,19 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
+        public void Select_WithStringGroupBy_AndWhereClause_ShouldReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("Field1,COUNT(*)")
+                .From("Table1")
+                .Where("Table1.Id = 3")
+                .GroupBy("Field1")
+                .Build();
+
+            sql.Should().Be("SELECT Field1,COUNT(*) FROM Table1 WHERE Table1.Id = 3 GROUP BY Field1");
+        }
+
+        [Fact]
         public void Select_WithStringArrayGroupBy_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
@@ -224,6 +235,20 @@ namespace Braspag.FluentQueryBuilder.Tests
 
             sql.Should().Be("SELECT Field1,Field2,COUNT(*) FROM Table1 GROUP BY Field1,Field2");
         }
+
+        [Fact]
+        public void Select_WithStringArrayGroupBy_AndWhereClause_ShouldReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("Field1,Field2,COUNT(*)")
+                .From("Table1")
+                .Where("Table1.Id = 3")
+                .GroupBy(new[] { "Field1", "Field2" })
+                .Build();
+
+            sql.Should().Be("SELECT Field1,Field2,COUNT(*) FROM Table1 WHERE Table1.Id = 3 GROUP BY Field1,Field2");
+        }
+
         [Fact]
         public void Select_WithStringOrderBy_ShouldReturnExpectedResult()
         {
@@ -234,6 +259,19 @@ namespace Braspag.FluentQueryBuilder.Tests
                 .Build();
 
             sql.Should().Be("SELECT Field1,COUNT(*) FROM Table1 ORDER BY Field1");
+        }
+
+        [Fact]
+        public void Select_WithStringOrderBy_AndWhereClause_ShouldReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("Field1,COUNT(*)")
+                .From("Table1")
+                .Where("Table1.Id = 3")
+                .OrderBy("Field1")
+                .Build();
+
+            sql.Should().Be("SELECT Field1,COUNT(*) FROM Table1 WHERE Table1.Id = 3 ORDER BY Field1");
         }
 
         [Fact]
@@ -249,6 +287,19 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
+        public void Select_WithStringArrayOrderBy_AndWhereClause_ShouldReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("Field1,Field2,COUNT(*)")
+                .From("Table1")
+                .Where("Table1.Id = 3")
+                .OrderBy(new[] { "Field1", "Field2" })
+                .Build();
+
+            sql.Should().Be("SELECT Field1,Field2,COUNT(*) FROM Table1 WHERE Table1.Id = 3 ORDER BY Field1,Field2");
+        }
+
+        [Fact]
         public void Select_Paginated_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
@@ -258,6 +309,19 @@ namespace Braspag.FluentQueryBuilder.Tests
                 .Build();
 
             sql.Should().Be("SELECT Field1,Field2,COUNT(*) FROM Table1 OFFSET 100 ROWS FETCH NEXT 50 ROWS ONLY");
+        }
+
+        [Fact]
+        public void Select_Paginated_WithWhereClause_ShouldReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("Field1,Field2,COUNT(*)")
+                .From("Table1")
+                .Where("Table1.Field = 3")
+                .Paginated(50, 3)
+                .Build();
+
+            sql.Should().Be("SELECT Field1,Field2,COUNT(*) FROM Table1 WHERE Table1.Field = 3 OFFSET 100 ROWS FETCH NEXT 50 ROWS ONLY");
         }
 
         [Fact]
@@ -282,6 +346,20 @@ namespace Braspag.FluentQueryBuilder.Tests
                 .Build();
 
             sql.Should().Be("SELECT Field1,Field2 FROM Table1 WITH(TABLOCK,INDEX(myindex),KEEPIDENTITY)");
+        }
+
+        [Fact]
+        public void Select_QueryHint_WithWhereAndJoinClause_ShoudlReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("T1.Field1,T1.Field2")
+                .From("Table1 T1").With("TABLOCK", "INDEX(myindex)", "KEEPIDENTITY")
+                .InnerJoin("Table2 T2", "T1.Id = T2.Id")
+                .Where("T1.Id = 3")
+                .Option("RECOMPILE", "INDEX(myindex)", "KEEPIDENTITY")
+                .Build();
+
+            sql.Should().Be("SELECT T1.Field1,T1.Field2 FROM Table1 T1 WITH(TABLOCK,INDEX(myindex),KEEPIDENTITY) INNER JOIN Table2 T2 ON T1.Id = T2.Id WHERE T1.Id = 3 OPTION(RECOMPILE,INDEX(myindex),KEEPIDENTITY)");
         }
 
         [Fact]

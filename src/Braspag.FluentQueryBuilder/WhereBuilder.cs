@@ -78,7 +78,7 @@ namespace Braspag.FluentQueryBuilder
         {
             return condition ? Or(predicate) : this;
         }
-        
+
         /// <summary>
         /// Conditionally adds an OR group condition to WHERE statement
         /// </summary>
@@ -131,6 +131,15 @@ namespace Braspag.FluentQueryBuilder
         public SelectBuilder Paginated(int pageSize, int currentPage)
         {
             return _selectBuilder.Paginated(pageSize, currentPage);
+        }
+
+        /// <summary>
+        /// Adds query hint option statement
+        /// </summary>
+        /// <param name="hints">The option clause to be used</param>
+        public SelectBuilder Option(params string[] hints)
+        {
+            return _selectBuilder.Option(hints);
         }
 
         public string Build()

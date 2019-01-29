@@ -459,25 +459,25 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
-        public void Select_PaginatedByRank_ShouldReturnExpectedResult()
+        public void Select_PaginatedByDenseRank_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
                 .Select("Field1,Field2,COUNT(*)")
                 .From("Table1")
-                .PaginatedByRank(50, 3, "Field1")
+                .PaginatedByDenseRank(50, 3, "Field1")
                 .Build();
 
             sql.Should().Be("SELECT * FROM (SELECT DENSE_RANK() OVER (ORDER BY Field1) AS RowPosition,Field1,Field2,COUNT(*) FROM Table1) DerivedTable WHERE RowPosition BETWEEN 101 AND 150");
         }
 
         [Fact]
-        public void Select_PaginatedByRank_AfterWhere_ShouldReturnExpectedResult()
+        public void Select_PaginatedByDenseRank_AfterWhere_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
                 .Select("Field1,Field2,COUNT(*)")
                 .From("Table1")
                 .Where("Field1 IS NULL")
-                .PaginatedByRank(50, 3, "Field1")
+                .PaginatedByDenseRank(50, 3, "Field1")
                 .Build();
 
             sql.Should().Be("SELECT * FROM (SELECT DENSE_RANK() OVER (ORDER BY Field1) AS RowPosition,Field1,Field2,COUNT(*) FROM Table1 WHERE Field1 IS NULL) DerivedTable WHERE RowPosition BETWEEN 101 AND 150");

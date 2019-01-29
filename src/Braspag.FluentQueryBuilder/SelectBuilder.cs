@@ -201,7 +201,7 @@ namespace Braspag.FluentQueryBuilder
         /// <param name="pageSize">Number of rows per page</param>
         /// <param name="currentPage">Current page</param>
         /// <param name="rankField">Field used for ranking</param>
-        public WhereBuilder PaginatedByRank(int pageSize, int currentPage, string rankField)
+        public WhereBuilder PaginatedByDenseRank(int pageSize, int currentPage, string rankField)
         {
             var denseRankField = $"DENSE_RANK() OVER (ORDER BY {rankField}) AS RowPosition";
 

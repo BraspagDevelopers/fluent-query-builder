@@ -325,7 +325,7 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
-        public void Select_One_TableHint_ShoudlReturnExpectedResult()
+        public void Select_One_TableHint_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
                 .Select("Field1,Field2")
@@ -337,7 +337,7 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
-        public void Select_Multiple_TableHint_ShoudlReturnExpectedResult()
+        public void Select_Multiple_TableHint_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
                 .Select("Field1,Field2")
@@ -349,7 +349,7 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
-        public void Select_QueryHint_WithWhereAndJoinClause_ShoudlReturnExpectedResult()
+        public void Select_QueryHint_WithWhereAndJoinClause_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
                 .Select("T1.Field1,T1.Field2")
@@ -363,7 +363,7 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
-        public void Select_One_QueryHint_ShoudlReturnExpectedResult()
+        public void Select_One_QueryHint_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
                 .Select("Field1,Field2")
@@ -375,7 +375,7 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
-        public void Select_Multiple_QueryHint_ShoudlReturnExpectedResult()
+        public void Select_Multiple_QueryHint_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
                 .Select("Field1,Field2")

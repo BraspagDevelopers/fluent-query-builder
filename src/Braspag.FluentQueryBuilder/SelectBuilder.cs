@@ -196,6 +196,28 @@ namespace Braspag.FluentQueryBuilder
         }
 
         /// <summary>
+        /// Adds pagination using DENSE_RANK
+        /// </summary>
+        /// <param name="pageSize">Number of rows per page</param>
+        /// <param name="currentPage">Current page</param>
+        /// <param name="rankField">Field used for ranking</param>
+        public WhereBuilder PaginatedByRank(int pageSize, int currentPage, string rankField)
+        {
+            var denseRankField = $"DENSE_RANK() OVER (ORDER BY {rankField}) AS RowPosition";
+
+            var innerSelect = PrependSelect(denseRankField).Build();
+
+            var firstRow = pageSize * (currentPage - 1) + 1;
+            var lastRow = pageSize * currentPage;
+            var builder = new SelectBuilder()
+                .Select("*")
+                .From($"({innerSelect}) DerivedTable")
+                .Where($"RowPosition BETWEEN {firstRow} AND {lastRow}");
+
+            return builder;
+        }
+        
+        /// <summary>
         /// Adds query hint option statement
         /// </summary>
         /// <param name="hints">The option clause to be used</param>

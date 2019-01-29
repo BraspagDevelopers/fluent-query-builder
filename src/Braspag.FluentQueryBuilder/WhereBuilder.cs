@@ -134,6 +134,17 @@ namespace Braspag.FluentQueryBuilder
         }
 
         /// <summary>
+        /// Adds pagination using DENSE_RANK
+        /// </summary>
+        /// <param name="pageSize">Number of rows per page</param>
+        /// <param name="currentPage">Current page</param>
+        /// <param name="rankField">Field used for ranking</param>
+        public WhereBuilder PaginatedByRank(int pageSize, int currentPage, string rankField)
+        {
+            return _selectBuilder.PaginatedByRank(pageSize, currentPage, rankField);
+        }
+
+        /// <summary>
         /// Adds query hint option statement
         /// </summary>
         /// <param name="hints">The option clause to be used</param>

@@ -55,6 +55,27 @@ namespace Braspag.FluentQueryBuilder
         }
 
         /// <summary>
+        /// Adds more fields to the beginning of the SELECT statement.
+        /// </summary>
+        /// <param name="fields">The comma separated fields to be added</param>  
+        public SelectBuilder PrependSelect(string fields)
+        {
+            var select = "SELECT ";
+            _builder.Remove(0, select.Length).Insert(0, $"{new SelectBuilder().Select(fields).Build()},");
+            return this;
+        }
+
+        /// <summary>
+        /// Adds more fields to the beginning of the SELECT statement.
+        /// </summary>
+        /// <param name="fields">Array with the fields that the query will return</param>
+        public SelectBuilder PrependSelect(string[] fields)
+        {
+            string f = string.Join(",", fields);
+            return PrependSelect(f);
+        }
+
+        /// <summary>
         /// Adds the FROM of the query.
         /// </summary>
         /// <param name="table">Name of the table</param>

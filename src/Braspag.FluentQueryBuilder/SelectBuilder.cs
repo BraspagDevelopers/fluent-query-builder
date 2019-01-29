@@ -37,6 +37,24 @@ namespace Braspag.FluentQueryBuilder
         }
 
         /// <summary>
+        /// Adds the SELECT COUNT() statement to Query.
+        /// </summary>
+        /// <param name="field">The field where the counting will be made on</param>              
+        public SelectBuilder SelectCount(string field)
+        {
+            _builder.Append($"SELECT COUNT({field})");
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the SELECT COUNT(*) statement to Query.
+        /// </summary>            
+        public SelectBuilder SelectCountAll()
+        {
+            return SelectCount("*");
+        }
+
+        /// <summary>
         /// Adds the FROM of the query.
         /// </summary>
         /// <param name="table">Name of the table</param>

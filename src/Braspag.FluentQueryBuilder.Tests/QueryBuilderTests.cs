@@ -385,5 +385,27 @@ namespace Braspag.FluentQueryBuilder.Tests
 
             sql.Should().Be("SELECT Field1,Field2 FROM Table1 OPTION(RECOMPILE,INDEX(myindex),KEEPIDENTITY)");
         }
+
+        [Fact]
+        public void SelectCountFromQuery_ShouldReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .SelectCount("Id")
+                .From("Table1")
+                .Build();
+
+            sql.Should().Be("SELECT COUNT(Id) FROM Table1");
+        }
+
+        [Fact]
+        public void SelectCountAllFromQuery_ShouldReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .SelectCountAll()
+                .From("Table1")
+                .Build();
+
+            sql.Should().Be("SELECT COUNT(*) FROM Table1");
+        }
     }
 }

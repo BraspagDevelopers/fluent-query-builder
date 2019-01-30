@@ -124,7 +124,7 @@ namespace Braspag.FluentQueryBuilder
         }
 
         /// <summary>
-        /// Adds pagination using the OFFSET/FETCH statements
+        /// Adds pagination using OFFSET/FETCH or DENSE_RANK statements
         /// </summary>
         /// <param name="pageSize">Number of rows per page</param>
         /// <param name="currentPage">Current page</param>

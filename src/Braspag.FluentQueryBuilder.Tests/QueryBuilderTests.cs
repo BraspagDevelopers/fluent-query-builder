@@ -409,56 +409,6 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
-        public void PrependSelectFromQuery_UsingStringSelect_ShouldReturnExpectedResult()
-        {
-            var sql = new SelectBuilder()
-                .Select("Field1,Field2")
-                .From("Table1")
-                .PrependSelect("Field3,Field4")
-                .Build();
-
-            sql.Should().Be("SELECT Field3,Field4,Field1,Field2 FROM Table1");
-        }
-
-        [Fact]
-        public void PrependSelectFromQuery_UsingStringArraySelect_ShouldReturnExpectedResult()
-        {
-            var sql = new SelectBuilder()
-                .Select(new[] { "Field1", "Field2" })
-                .From("Table1")
-                .PrependSelect(new[] { "Field3", "Field4" })
-                .Build();
-
-            sql.Should().Be("SELECT Field3,Field4,Field1,Field2 FROM Table1");
-        }
-
-        [Fact]
-        public void PrependSelectAfterWhereFromQuery_UsingStringSelect_ShouldReturnExpectedResult()
-        {
-            var sql = new SelectBuilder()
-                .Select("Field1,Field2")
-                .From("Table1")
-                .Where("Field5 = Field6")
-                .PrependSelect("Field3,Field4")
-                .Build();
-
-            sql.Should().Be("SELECT Field3,Field4,Field1,Field2 FROM Table1 WHERE Field5 = Field6");
-        }
-
-        [Fact]
-        public void PrependSelectAfterWhereFromQuery_UsingStringArraySelect_ShouldReturnExpectedResult()
-        {
-            var sql = new SelectBuilder()
-                .Select(new[] { "Field1", "Field2" })
-                .From("Table1")
-                .Where("Field5 = Field6")
-                .PrependSelect(new[] { "Field3", "Field4" })
-                .Build();
-
-            sql.Should().Be("SELECT Field3,Field4,Field1,Field2 FROM Table1 WHERE Field5 = Field6");
-        }
-
-        [Fact]
         public void Select_PaginatedByDenseRank_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()

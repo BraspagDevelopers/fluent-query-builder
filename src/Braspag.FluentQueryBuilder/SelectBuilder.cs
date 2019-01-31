@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -36,6 +37,35 @@ namespace Braspag.FluentQueryBuilder
             return Select(f);
         }
 
+        /// <summary>
+        /// Adds the SELECT COUNT() statement to Query.
+        /// </summary>
+        /// <param name="field">The field where the counting will be made on</param>              
+        public SelectBuilder SelectCount(string field)
+        {
+            _builder.Append($"SELECT COUNT({field})");
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the SELECT COUNT(*) statement to Query.
+        /// </summary>            
+        public SelectBuilder SelectCountAll()
+        {
+            return SelectCount("*");
+        }
+
+        /// <summary>
+        /// Adds more fields to the beginning of the SELECT statement.
+        /// </summary>
+        /// <param name="fields">The comma separated fields to be added</param>  
+        internal SelectBuilder PrependSelect(string fields)
+        {
+            var select = "SELECT ";
+            _builder.Remove(0, select.Length).Insert(0, $"{new SelectBuilder().Select(fields).Build()},");
+            return this;
+        }
+        
         /// <summary>
         /// Adds the FROM of the query.
         /// </summary>
@@ -146,7 +176,7 @@ namespace Braspag.FluentQueryBuilder
         }
 
         /// <summary>
-        /// Adds pagination using the OFFSET/FETCH statements
+        /// Adds pagination using OFFSET/FETCH statements
         /// </summary>
         /// <param name="pageSize">Number of rows per page</param>
         /// <param name="currentPage">Current page</param>
@@ -154,6 +184,29 @@ namespace Braspag.FluentQueryBuilder
         {
             _builder.Append($" OFFSET {pageSize * (currentPage - 1)} ROWS FETCH NEXT {pageSize} ROWS ONLY");
             return this;
+        }
+
+        /// <summary>
+        /// Adds pagination using DENSE_RANK statement
+        /// </summary>
+        /// <param name="pageSize">Number of rows per page</param>
+        /// <param name="currentPage">Current page</param>
+        /// <param name="rankField">Field used for dense ranking</param>
+        public SelectBuilder Paginated(int pageSize, int currentPage, string rankField)
+        {
+            var denseRankField = $"DENSE_RANK() OVER (ORDER BY {rankField}) AS RowPosition";
+
+            var innerSelect = PrependSelect(denseRankField).Build();
+
+            var firstRow = pageSize * (currentPage - 1) + 1;
+            var lastRow = pageSize * currentPage;
+            var builder = new SelectBuilder()
+                .Select("*")
+                .From($"({innerSelect}) DerivedTable")
+                .Where($"RowPosition BETWEEN {firstRow} AND {lastRow}")
+                .ToSelectBuilder();
+
+            return builder;
         }
 
         /// <summary>
@@ -200,5 +253,6 @@ namespace Braspag.FluentQueryBuilder
         {
             return $" {join} JOIN {table} ON {on}";
         }
+       
     }
 }

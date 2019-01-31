@@ -325,7 +325,7 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
-        public void Select_One_TableHint_ShoudlReturnExpectedResult()
+        public void Select_One_TableHint_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
                 .Select("Field1,Field2")
@@ -337,7 +337,7 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
-        public void Select_Multiple_TableHint_ShoudlReturnExpectedResult()
+        public void Select_Multiple_TableHint_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
                 .Select("Field1,Field2")
@@ -349,7 +349,7 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
-        public void Select_QueryHint_WithWhereAndJoinClause_ShoudlReturnExpectedResult()
+        public void Select_QueryHint_WithWhereAndJoinClause_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
                 .Select("T1.Field1,T1.Field2")
@@ -363,7 +363,7 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
-        public void Select_One_QueryHint_ShoudlReturnExpectedResult()
+        public void Select_One_QueryHint_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
                 .Select("Field1,Field2")
@@ -375,7 +375,7 @@ namespace Braspag.FluentQueryBuilder.Tests
         }
 
         [Fact]
-        public void Select_Multiple_QueryHint_ShoudlReturnExpectedResult()
+        public void Select_Multiple_QueryHint_ShouldReturnExpectedResult()
         {
             var sql = new SelectBuilder()
                 .Select("Field1,Field2")
@@ -384,6 +384,53 @@ namespace Braspag.FluentQueryBuilder.Tests
                 .Build();
 
             sql.Should().Be("SELECT Field1,Field2 FROM Table1 OPTION(RECOMPILE,INDEX(myindex),KEEPIDENTITY)");
+        }
+
+        [Fact]
+        public void SelectCountFromQuery_ShouldReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .SelectCount("Id")
+                .From("Table1")
+                .Build();
+
+            sql.Should().Be("SELECT COUNT(Id) FROM Table1");
+        }
+
+        [Fact]
+        public void SelectCountAllFromQuery_ShouldReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .SelectCountAll()
+                .From("Table1")
+                .Build();
+
+            sql.Should().Be("SELECT COUNT(*) FROM Table1");
+        }
+
+        [Fact]
+        public void Select_PaginatedByDenseRank_ShouldReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("Field1,Field2,COUNT(*)")
+                .From("Table1")
+                .Paginated(50, 3, "Field1")
+                .Build();
+
+            sql.Should().Be("SELECT * FROM (SELECT DENSE_RANK() OVER (ORDER BY Field1) AS RowPosition,Field1,Field2,COUNT(*) FROM Table1) DerivedTable WHERE RowPosition BETWEEN 101 AND 150");
+        }
+
+        [Fact]
+        public void Select_PaginatedByDenseRank_AfterWhere_ShouldReturnExpectedResult()
+        {
+            var sql = new SelectBuilder()
+                .Select("Field1,Field2,COUNT(*)")
+                .From("Table1")
+                .Where("Field1 IS NULL")
+                .Paginated(50, 3, "Field1")
+                .Build();
+
+            sql.Should().Be("SELECT * FROM (SELECT DENSE_RANK() OVER (ORDER BY Field1) AS RowPosition,Field1,Field2,COUNT(*) FROM Table1 WHERE Field1 IS NULL) DerivedTable WHERE RowPosition BETWEEN 101 AND 150");
         }
     }
 }

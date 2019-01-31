@@ -414,7 +414,7 @@ namespace Braspag.FluentQueryBuilder.Tests
             var sql = new SelectBuilder()
                 .Select("Field1,Field2,COUNT(*)")
                 .From("Table1")
-                .Paginated(50, 3, PaginationType.DenseRank, "Field1")
+                .Paginated(50, 3, "Field1")
                 .Build();
 
             sql.Should().Be("SELECT * FROM (SELECT DENSE_RANK() OVER (ORDER BY Field1) AS RowPosition,Field1,Field2,COUNT(*) FROM Table1) DerivedTable WHERE RowPosition BETWEEN 101 AND 150");
@@ -427,7 +427,7 @@ namespace Braspag.FluentQueryBuilder.Tests
                 .Select("Field1,Field2,COUNT(*)")
                 .From("Table1")
                 .Where("Field1 IS NULL")
-                .Paginated(50, 3, PaginationType.DenseRank, "Field1")
+                .Paginated(50, 3, "Field1")
                 .Build();
 
             sql.Should().Be("SELECT * FROM (SELECT DENSE_RANK() OVER (ORDER BY Field1) AS RowPosition,Field1,Field2,COUNT(*) FROM Table1 WHERE Field1 IS NULL) DerivedTable WHERE RowPosition BETWEEN 101 AND 150");

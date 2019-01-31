@@ -124,18 +124,24 @@ namespace Braspag.FluentQueryBuilder
         }
 
         /// <summary>
-        /// Adds pagination using OFFSET/FETCH or DENSE_RANK statements
+        /// Adds pagination using OFFSET/FETCH statements
         /// </summary>
         /// <param name="pageSize">Number of rows per page</param>
         /// <param name="currentPage">Current page</param>
-        /// <param name="paginationType">Method of pagination</param>
-        /// <param name="rankField">Field used for ranking</param>
-        public SelectBuilder Paginated(int pageSize,
-            int currentPage,
-            PaginationType paginationType = PaginationType.OffsetFetch,
-            string rankField = null)
+        public SelectBuilder Paginated(int pageSize, int currentPage)
         {
-            return _selectBuilder.Paginated(pageSize, currentPage, paginationType, rankField);
+            return _selectBuilder.Paginated(pageSize, currentPage);
+        }
+
+        /// <summary>
+        /// Adds pagination using DENSE_RANK statement
+        /// </summary>
+        /// <param name="pageSize">Number of rows per page</param>
+        /// <param name="currentPage">Current page</param>
+        /// <param name="rankField">Field used for dense ranking</param>
+        public SelectBuilder Paginated(int pageSize, int currentPage, string rankField)
+        {
+            return _selectBuilder.Paginated(pageSize, currentPage, rankField);
         }
 
         /// <summary>

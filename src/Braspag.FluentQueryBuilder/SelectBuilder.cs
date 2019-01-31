@@ -176,28 +176,39 @@ namespace Braspag.FluentQueryBuilder
         }
 
         /// <summary>
-        /// Adds pagination using OFFSET/FETCH or DENSE_RANK statements
+        /// Adds pagination using OFFSET/FETCH statements
         /// </summary>
         /// <param name="pageSize">Number of rows per page</param>
         /// <param name="currentPage">Current page</param>
-        /// <param name="paginationType">Method of pagination</param>
-        /// <param name="rankField">Field used for ranking</param>
-        public SelectBuilder Paginated(int pageSize,
-            int currentPage,
-            PaginationType paginationType = PaginationType.OffsetFetch,
-            string rankField = null)
+        public SelectBuilder Paginated(int pageSize, int currentPage)
         {
-            switch (paginationType)
-            {
-                case PaginationType.OffsetFetch:
-                    return PaginateWithOffsetFetch(pageSize, currentPage);
-                case PaginationType.DenseRank:
-                    return PaginateWithDenseRank(pageSize, currentPage, rankField);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(paginationType), paginationType, null);
-            }
+            _builder.Append($" OFFSET {pageSize * (currentPage - 1)} ROWS FETCH NEXT {pageSize} ROWS ONLY");
+            return this;
         }
-        
+
+        /// <summary>
+        /// Adds pagination using DENSE_RANK statement
+        /// </summary>
+        /// <param name="pageSize">Number of rows per page</param>
+        /// <param name="currentPage">Current page</param>
+        /// <param name="rankField">Field used for dense ranking</param>
+        public SelectBuilder Paginated(int pageSize, int currentPage, string rankField)
+        {
+            var denseRankField = $"DENSE_RANK() OVER (ORDER BY {rankField}) AS RowPosition";
+
+            var innerSelect = PrependSelect(denseRankField).Build();
+
+            var firstRow = pageSize * (currentPage - 1) + 1;
+            var lastRow = pageSize * currentPage;
+            var builder = new SelectBuilder()
+                .Select("*")
+                .From($"({innerSelect}) DerivedTable")
+                .Where($"RowPosition BETWEEN {firstRow} AND {lastRow}")
+                .ToSelectBuilder();
+
+            return builder;
+        }
+
         /// <summary>
         /// Adds query hint option statement
         /// </summary>
@@ -242,28 +253,6 @@ namespace Braspag.FluentQueryBuilder
         {
             return $" {join} JOIN {table} ON {on}";
         }
-
-        private SelectBuilder PaginateWithOffsetFetch(int pageSize, int currentPage)
-        {
-            _builder.Append($" OFFSET {pageSize * (currentPage - 1)} ROWS FETCH NEXT {pageSize} ROWS ONLY");
-            return this;
-        }
-
-        private SelectBuilder PaginateWithDenseRank(int pageSize, int currentPage, string rankField)
-        {
-            var denseRankField = $"DENSE_RANK() OVER (ORDER BY {rankField}) AS RowPosition";
-
-            var innerSelect = PrependSelect(denseRankField).Build();
-
-            var firstRow = pageSize * (currentPage - 1) + 1;
-            var lastRow = pageSize * currentPage;
-            var builder = new SelectBuilder()
-                .Select("*")
-                .From($"({innerSelect}) DerivedTable")
-                .Where($"RowPosition BETWEEN {firstRow} AND {lastRow}")
-                .ToSelectBuilder();
-
-            return builder;
-        }
+       
     }
 }
